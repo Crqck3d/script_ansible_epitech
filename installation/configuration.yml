@@ -18,7 +18,7 @@
         ./oh-my-zsh.sh
         rm oh-my-zsh.sh
         chsh "{{ username.stdout }}" -s /usr/bin/zsh
-      become: false
+      become_user: {{ username.stdout }}
 
     - name: Configuration of FontCache
       shell: |
@@ -29,7 +29,7 @@
         mkdir -p /home/"{{ username.stdout }}"/.config/fontconfig/conf.d
         fc-cache -vf /home/"{{ username.stdout }}"/.fonts/
         mv 10-powerline-symbols.conf /home/"{{ username.stdout }}"/.config/fontconfig/conf.d/
-      become: false
+      become_user: {{ username.stdout }}
 
     - name: Configuration of Poweroff and Rebot
       shell: |
@@ -50,9 +50,9 @@
             owner: "{{ username.stdout }}"
             group: "{{ username.stdout }}"
             mode: u=rw,g=rw,o=r
-      become: false
+      become_user: {{ username.stdout }}
 
-    - name : Configuration of zshrc with the user settings
+    - name: Configuration of zshrc with the user settings
       block:
         - replace:
             path: "~/.zshrc"
@@ -62,9 +62,9 @@
             path: "~/.zshrc"
             regexp: "username"
             replace: "{{ username.stdout }}"
-      become_user: true
+      become_user: {{ username.stdout }}
 
-    - name : Configuration of Conky
+    - name: Configuration of Conky
       replace:
         path: "~/.conkyrc"
         regexp: "eth0"

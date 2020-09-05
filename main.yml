@@ -15,6 +15,7 @@
     - name: network-interface
       prompt: "Active network interface ? (ip addr)"
       default: "wlp2s0"
+      private: no
 
   tasks:
     - name: Include variables
