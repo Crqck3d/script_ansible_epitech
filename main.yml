@@ -1,0 +1,34 @@
+---
+
+- hosts: localhost
+  become: true
+  become_method: sudo
+
+  vars_prompt:
+    - name: usermail
+      prompt: "What is your mail?"
+      private: no
+    - name: epitech
+      prompt: "Are you an Epitech student? (true/false)"
+      private: no
+      default: "false"
+    - name: network-interface
+      prompt: "Active network interface ? (ip addr)"
+      default: "wlp2s0"
+
+  tasks:
+    - name: Include variables
+      include_vars:
+        file: variables.yml
+        name: params
+      vars:
+        username: "{{ whoami }}"
+
+    - name: Get username
+      become: false
+      local_action: command whoami
+      register: username
+
+    - include: ./installation/dependencies.yml
+    - include: ./installation/utilities.yml
+    - include: ./installation/configuration.yml

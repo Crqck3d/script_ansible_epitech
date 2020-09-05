@@ -1,0 +1,71 @@
+---
+
+    - name: Installation of Blih
+      block:
+      - copy:
+          src: blih
+          dest: /root/blih
+      - shell: |
+          mv /root/blih /usr/bin/blih
+          chmod 755 /usr/bin/blih
+      when: epitech == "true"
+
+    - name: Configuration of ZSH
+      shell: |
+        curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh > oh-my-zsh.sh
+        sed -i "s:env zsh:exit:g" oh-my-zsh.sh
+        chmod 755 oh-my-zsh.sh
+        ./oh-my-zsh.sh
+        rm oh-my-zsh.sh
+        chsh "{{ username.stdout }}" -s /usr/bin/zsh
+      become: false
+
+    - name: Configuration of FontCache
+      shell: |
+        wget https://github.com/powerline/powerline/raw/develop/font/PowerlineSymbols.otf
+        wget https://github.com/powerline/powerline/raw/develop/font/10-powerline-symbols.conf
+        mkdir /home/"{{ username.stdout }}"/.fonts/
+        mv PowerlineSymbols.otf /home/"{{ username.stdout }}"/.fonts/
+        mkdir -p /home/"{{ username.stdout }}"/.config/fontconfig/conf.d
+        fc-cache -vf /home/"{{ username.stdout }}"/.fonts/
+        mv 10-powerline-symbols.conf /home/"{{ username.stdout }}"/.config/fontconfig/conf.d/
+      become: false
+
+    - name: Configuration of Poweroff and Rebot
+      shell: |
+        chmod +s /sbin/poweroff
+        chmod +s /sbin/reboot
+
+    - name: Copy of configuration file
+      block:
+        - copy:
+            src: conkyrc
+            dest: /home/{{ username.stdout }}/.conkyrc
+            owner: "{{ username.stdout }}"
+            group: "{{ username.stdout }}"
+            mode: u=rw,g=r,o=r
+        - copy:
+            src: zshrc
+            dest: /home/{{ username.stdout }}/.zshrc
+            owner: "{{ username.stdout }}"
+            group: "{{ username.stdout }}"
+            mode: u=rw,g=rw,o=r
+      become: false
+
+    - name : Configuration of zshrc with the user settings
+      block:
+        - replace:
+            path: "~/.zshrc"
+            regexp: "usermail"
+            replace: "{{ usermail }}"
+        - replace:
+            path: "~/.zshrc"
+            regexp: "username"
+            replace: "{{ username.stdout }}"
+      become_user: true
+
+    - name : Configuration of Conky
+      replace:
+        path: "~/.conkyrc"
+        regexp: "eth0"
+        replace: "{{ network-interface }}"
