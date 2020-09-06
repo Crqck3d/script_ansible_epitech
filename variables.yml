@@ -1,6 +1,6 @@
 ---
 
-  dependencies: ['gcc', 'build-essential', 'valgrind', 'libncurses5', 'curl', 'zsh', 'terminator', 'tree', 'git']
-  package: ['openssh-server', 'glances', 'firefox', 'conky-all', 'gnome-tweak-tool', 'net-tools', 'filezilla']
-  tools: ['lollypop', 'easytag', 'soundconverter', 'vlc', 'qbittorrent', 'gimp']
+  devTools: ['gcc', 'build-essential', 'valgrind', 'libncurses5', 'curl', 'openssh-server', 'net-tools']
+  userTools: ['zsh', 'terminator', 'tree', 'git', 'glances', 'conky-all', 'gnome-tweak-tool']
+  userSoftware: ['glances', 'firefox', 'filezilla', 'lollypop', 'easytag', 'soundconverter', 'vlc', 'qbittorrent', 'gimp']
   snap: ['discord', 'spotify', 'intellij-idea-ultimate']

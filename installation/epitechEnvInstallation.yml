@@ -1,0 +1,13 @@
+---
+
+    - name: Installation of Blih
+      copy:
+        src: blih
+        dest: /usr/bin/blih
+        mode: '0755'
+      become: true
+
+    - name: Uplad SSH-Key to Epitech's server
+      shell: |
+        echo "{{ blihPass }}" >> blih -u "{{ usermail }}" sshkey upload /home/$USER/.ssh/id_rsa.pub
+      when: blihPass is defined

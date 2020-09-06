@@ -1,24 +1,21 @@
 ---
 
-    - name: Installation of Blih
-      block:
-      - copy:
-          src: blih
-          dest: /root/blih
-      - shell: |
-          mv /root/blih /usr/bin/blih
-          chmod 755 /usr/bin/blih
-      when: epitech == "true"
-
-    - name: Configuration of ZSH
+    - name: Get ZSH installation script
       shell: |
         curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh > oh-my-zsh.sh
         sed -i "s:env zsh:exit:g" oh-my-zsh.sh
         chmod 755 oh-my-zsh.sh
-        ./oh-my-zsh.sh
+
+    - name: Installation of ZSH
+      shell: |
+        nohup ./oh-my-zsh.sh $
         rm oh-my-zsh.sh
-        chsh "{{ username.stdout }}" -s /usr/bin/zsh
-      become_user: {{ username.stdout }}
+
+    - name: Setting up ZSH as default shell
+      user:
+        name: "{{ username.stdout }}"
+        shell: /usr/bin/zsh
+      become: true
 
     - name: Configuration of FontCache
       shell: |
@@ -29,12 +26,12 @@
         mkdir -p /home/"{{ username.stdout }}"/.config/fontconfig/conf.d
         fc-cache -vf /home/"{{ username.stdout }}"/.fonts/
         mv 10-powerline-symbols.conf /home/"{{ username.stdout }}"/.config/fontconfig/conf.d/
-      become_user: {{ username.stdout }}
 
     - name: Configuration of Poweroff and Rebot
       shell: |
         chmod +s /sbin/poweroff
         chmod +s /sbin/reboot
+      become: true
 
     - name: Copy of configuration file
       block:
@@ -50,7 +47,6 @@
             owner: "{{ username.stdout }}"
             group: "{{ username.stdout }}"
             mode: u=rw,g=rw,o=r
-      become_user: {{ username.stdout }}
 
     - name: Configuration of zshrc with the user settings
       block:
@@ -62,10 +58,15 @@
             path: "~/.zshrc"
             regexp: "username"
             replace: "{{ username.stdout }}"
-      become_user: {{ username.stdout }}
 
     - name: Configuration of Conky
       replace:
         path: "~/.conkyrc"
         regexp: "eth0"
-        replace: "{{ network-interface }}"
+        replace: "{{ ansible_default_ipv4.interface }}"
+
+    - name: Clean unused packages
+      apt:
+        autoremove: yes
+        purge: yes
+      become: true

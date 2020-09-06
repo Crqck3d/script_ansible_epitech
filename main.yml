@@ -1,7 +1,6 @@
 ---
 
-- hosts: localhost
-  become: true
+- hosts: test
   become_method: sudo
 
   vars_prompt:
@@ -9,13 +8,13 @@
       prompt: "What is your mail?"
       private: no
     - name: epitech
-      prompt: "Are you an Epitech student? (true/false)"
+      prompt: "Are you an Epitech student? (yes/no)"
       private: no
-      default: "false"
-    - name: network-interface
-      prompt: "Active network interface ? (ip addr)"
-      default: "wlp2s0"
+      default: "no"
+    - name: sshKey
+      prompt: "Do you need a new SSH-Key ? (yes/no)"
       private: no
+      default: "no"
 
   tasks:
     - name: Include variables
@@ -23,13 +22,15 @@
         file: variables.yml
         name: params
       vars:
-        username: "{{ whoami }}"
+        username:
 
     - name: Get username
-      become: false
       local_action: command whoami
       register: username
 
-    - include: ./installation/dependencies.yml
-    - include: ./installation/utilities.yml
+    - include: ./installation/devEnvInstallation.yml
+    - include: ./installation/userEnvInstallation.yml
     - include: ./installation/configuration.yml
+
+    - include: ./installation/epitechEnvInstallation.yml
+      when: epitech == "yes"
