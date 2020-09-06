@@ -3,23 +3,26 @@
 
 This Playbook Ansible deploys a custom development environment (almost) compliant with Epitech, enjoy :wink:
 
-### Version Note [v1.0] [Stable]
+### Version Note [v1.1] [Stable]
 
-> This script is `being improved` and is __not fully configured__ for a development environment of __Epitech's student__!
+> This script is `being improved` and __may have bugs__!
+##### Warning: This script __does not install__ the (code) norm for __Epitech students__.
 
 #### Next features :
 
+- [X] Launching script
 - [X] SSH-Key file management
 - [X] Temporary files management
 - [ ] Full OS support
 - [ ] More explicit variables
 - [ ] Epitech Code Norm
+- [ ] Error management
 
 # Description
 
-To execute this project, you need Ansible and the sudoer right.
+To execute this project, you need the sudoer right.
 
-This playbook will install a custom dev env, so it's mine!
+This script will install a custom dev env, so it's mine!
 
 __You can edit the "variables.yml" file to remove or include software.__
 
@@ -56,22 +59,11 @@ As you can see there is some alias, and yes, I use the software `glances` as `ht
 # Usage
 
 ```
-$> sudo apt install ansible
+$> ./launch.sh -h
 ``` 
 
-To run the playbook, execute :
-```
-$> ansible-playbook --ask-become-pass main.yml
-BECOME password:
-```
-The asked become pass correspond to your password.
-
-> If you are an Epitech student, you will need to pass your blih password as a parameter if you want to upload your ssh-key to the Epitech server.
-```
-$> ansible-playbook --ask-become-pass main.yml --extra-var blihPass=UrPass
-BECOME password:
-```
-If you want all the results of every command executed, add the "-v" option.
+If you are an Epitech student, you need to pass your blih password as a parameter with the `-b` flag if you want to upload your ssh-key to the Epitech server.
+> If you want all the results of every command executed, add the "-v" option.
 
 ## Software List
 
